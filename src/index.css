@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .autofill-text:-webkit-autofill {
+      -webkit-text-fill-color: var(--text-hi);
+    }
+  
+    input {
+      @apply autofill:shadow-[inset_0_0_0_50px_var(--background)];
+      @apply autofill-text;
+    }
+  }
