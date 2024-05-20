@@ -74,7 +74,8 @@ function App() {
       } flex flex-col`}
     >
       <header
-        className={`sticky top-0 ${isDarkMode ? "bg-[#02040A]" : "bg-white"}`}
+        // className={`sticky top-0 ${isDarkMode ? "bg-[#02040A]" : "bg-white"}`}
+        className="sticky top-0 bg-white dark:bg-[#02040A]"
       >
         <div className="mt-4 flex flex-col items-center sm:hidden">
           {isDarkMode ? (
@@ -352,7 +353,10 @@ function App() {
             type="button"
             className={`group inline-flex flex-col items-center justify-center rounded-l px-4 py-2
             ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-200"}`}
-            onClick={() => setIsDarkMode(false)}
+            onClick={() => {
+              setIsDarkMode(false);
+              document.documentElement.classList.remove("dark");
+            }}
           >
             <svg
               className={`h-[20px] w-[20px]
@@ -371,7 +375,10 @@ function App() {
             type="button"
             className={`group inline-flex flex-col items-center justify-center rounded-r p-2
              ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-200"}`}
-            onClick={() => setIsDarkMode(true)}
+            onClick={() => {
+              setIsDarkMode(true);
+              document.documentElement.classList.add("dark");
+            }}
           >
             <svg
               className={`h-[20px] w-[20px]

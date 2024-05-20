@@ -4,11 +4,7 @@ const HanhTrinhSM = (isDarkMode) => {
   return (
     <>
       <div className="space-y-2 px-4 pb-4">
-        <div
-          className={`text-base ${
-            isDarkMode ? "text-gray-300" : "text-gray-500"
-          }`}
-        >
+        <div className="text-base text-gray-500 dark:text-yellow-500">
           Hành Trình Đơn Hàng
         </div>
         <div className="">
