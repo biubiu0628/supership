@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import DonHangSM from "./components/smartphone/DonHangSM";
 import NguoiGuiSM from "./components/smartphone/NguoiGuiSM";
@@ -13,7 +13,15 @@ import HangNhanMT from "./components/maytinh/HangNhanMT";
 import HanhTrinhMT from "./components/maytinh/HanhTrinhMT";
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("isDarkMode");
+    return savedMode ? JSON.parse(savedMode) : false;
+  });
+
+  useEffect(
+    () => localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode)),
+    [isDarkMode]
+  );
 
   // eslint-disable-next-line
   const [donHang, setDonHang] = useState({
@@ -43,14 +51,20 @@ function App() {
   });
 
   // eslint-disable-next-line
-  const [isSearch, setIsSearch] = useState(null);
+  const [isSearch, setIsSearch] = useState("");
+
+  const [searchResult, setSearchResult] = useState(null);
 
   const handleSearch = (index) => {
     if (index === donHang.id) {
-      setIsSearch(true);
+      setSearchResult(true);
     } else {
-      setIsSearch(false);
+      setSearchResult(false);
     }
+  };
+
+  const handleDeleteSearch = () => {
+    setIsSearch("");
   };
 
   return (
@@ -128,11 +142,12 @@ function App() {
                     />
                   </svg>
                 </div>
+                {/* thanh tìm kiếm */}
                 <input
                   id="default-search"
                   type="search"
                   className={` block w-full rounded-lg border p-4 pl-10 text-base
-                  focus:outline-none focus:ring-0 
+                  focus:outline-none focus:ring-0
                   ${isDarkMode ? "border-gray-400" : "border-gray-300"}
                   ${isDarkMode ? "bg-[#0E1117]" : "bg-gray-50"}
                   ${isDarkMode ? "text-white" : "text-gray-900"}
@@ -142,9 +157,18 @@ function App() {
                   placeholder="Nhập mã đơn hàng ..."
                   value={isSearch}
                   required
-                  onChange={(e) => setIsSearch(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setIsSearch(value);
+                    handleSearch(isSearch);
+                  }}
                 />
-                <div className="absolute inset-y-0 right-[100px] flex cursor-pointer items-center pr-3">
+                {/* nút xóa */}
+                <div
+                  className={`absolute inset-y-0 right-[100px] cursor-pointer items-center pr-3 
+                  ${isSearch === "" ? "hidden" : "flex"}`}
+                  onClick={handleDeleteSearch}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -162,12 +186,26 @@ function App() {
                     />
                   </svg>
                 </div>
-                <div className="absolute bottom-2.5 right-2.5">
+                {/* nút tìm kiếm */}
+                <div className="absolute bottom-2.5 right-2.5 ">
                   <button
-                    className="focus:ring-cardinal-300 dark:focus:ring-primary rounded-lg px-4  
-                  py-2 text-sm font-medium text-white focus:outline-none focus:ring-4 
-                  bg-primary hover:bg-cardinal-700 dark:bg-primary dark:hover:bg-primary"
-                    onClick={handleSearch}
+                    className={`rounded-lg px-4  
+                  py-2 text-sm font-medium text-white focus:outline-none focus:ring-4
+                  ${isDarkMode ? "focus:ring-primary" : "focus:ring-[#F9A8AB]"}
+                  ${
+                    isDarkMode
+                      ? isSearch === ""
+                        ? "bg-[#374151]"
+                        : "bg-primary"
+                      : isSearch === ""
+                      ? "bg-[#9CA3AF]"
+                      : "bg-primary"
+                  }
+                  ${isSearch === "" ? "pointer-events-none" : ""}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSearch(isSearch);
+                    }}
                   >
                     Tìm Kiếm
                   </button>
@@ -177,7 +215,7 @@ function App() {
           </div>
         </div>
       </header>
-      {isSearch ? (
+      {isSearch === "" ? (
         <>
           {/* not found */}
           <main
@@ -206,6 +244,38 @@ function App() {
               className={`${isDarkMode ? "text-gray-300" : "text-gray-500"}`}
             >
               Vui lòng nhập Mã Đơn Hàng để bắt đầu.
+            </div>
+          </main>
+        </>
+      ) : !searchResult ? (
+        <>
+          {/* not found */}
+          <main
+            className={`flex flex-1 flex-col items-center justify-center ${
+              isDarkMode ? "bg-[#0E1117]" : "bg-white"
+            }`}
+          >
+            <div
+              className={`flex h-[200px] w-[200px] flex-col items-center justify-center rounded-full border
+              ${isDarkMode ?? "border-gray-50/30"}`}
+            >
+              <img
+                src="images/icon.svg"
+                className="w-[200px] sm:w-[200px]"
+                alt="SuperShip"
+              />
+            </div>
+            <div
+              className={`mt-4 text-lg font-medium ${
+                isDarkMode ? "text-gray-100" : "text-gray-700"
+              }`}
+            >
+              Mã Đơn Chưa Đúng
+            </div>
+            <div
+              className={`${isDarkMode ? "text-gray-300" : "text-gray-500"}`}
+            >
+              Hãy thử tìm với Mã Đơn Hàng khác.
             </div>
           </main>
         </>
@@ -241,7 +311,7 @@ function App() {
           </div>
           {/* maytinh */}
           <div
-            className={`mt-4 hidden h-full flex-1 flex-col space-y-6 text-gray-600 sm:flex md:w-[1440px] ${
+            className={`mt-2 hidden h-full flex-1 flex-col space-y-6 text-gray-600 sm:flex md:w-[1440px] ${
               isDarkMode ? "bg-[#0E1117]" : "bg-white"
             }`}
           >

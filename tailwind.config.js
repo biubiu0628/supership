@@ -4,7 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#B61A32",
+        primary: "#D2253B",
+      },
+      fontFamily: {
+        fira: ["FiraSans"],
       },
     },
   },
