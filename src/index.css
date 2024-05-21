@@ -4,11 +4,16 @@
 
 @layer components {
     .autofill-text:-webkit-autofill {
-      -webkit-text-fill-color: var(--text-hi);
+      -webkit-text-fill-color: var(--text-fill);
     }
   
     input {
-      @apply autofill:shadow-[inset_0_0_0_50px_var(--background)];
+      @apply autofill:shadow-[inset_0_0_0_50px_var(--background-fill)];
       @apply autofill-text;
     }
+  }
+
+  :root.dark{
+    --background-fill:#1D2638;
+    --text-fill:#FFFFFF;
   }

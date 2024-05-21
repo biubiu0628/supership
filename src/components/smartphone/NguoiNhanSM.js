@@ -1,14 +1,10 @@
 import React from "react";
 
-const NguoiNhanSM = ({ name, sdt, address, isDarkMode }) => {
+const NguoiNhanSM = ({ name, sdt, address }) => {
   return (
     <>
       <div className="text-primary px-4 text-right">
-        <div
-          className={`text-base ${
-            isDarkMode ? "text-gray-400" : "text-gray-500"
-          }`}
-        >
+        <div className="text-base dark:text-gray-400 text-gray-500">
           Người Nhận
         </div>
         <div>
